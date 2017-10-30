@@ -1,8 +1,10 @@
 const express = require('express');
 const app = express();
+const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const Picture = require('./picture/picture.js');
 
+app.use(morgan('dev')); // dev logging
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(function(req, res, next) {
@@ -11,12 +13,9 @@ app.use(function(req, res, next) {
   next();
 }); 
 
+
 app.get('/', function (req, res) {
   res.send('Hello World!')
-})
-
-app.get('/api', function (req, res) {
-  res.send('HI THERE YOU HIT THE API')
 })
 
 // test picture data
@@ -59,14 +58,41 @@ app.post('/api/pictures/new', function(req, res) {
   res.send(NEWPICTURE)
 })
 
-// testing responses to the new picture route.
-app.get('/pictures/new', async (req, res) => {
-  let TESTPARAMS = {hello: "world", image: "BADBINARYBITCH"};
-  const result = await Picture.create(TESTPARAMS);
+/* REAL IMPLEMENTATION OF API */
+
+// Get all the pictures
+app.get('/pictures/all', async (req, res) => {
+  const result = await Picture.getAll({});
+  result.success? res.status(200) : res.status(500)
+  res.json(result.result)
+})
+
+// Create a new picture
+app.post('/pictures/new', async (req, res) => {
+  console.log(`RECEIVED POST ${JSON.stringify(req.body, null, 2)}`)
+
+
+  /*
+
+
+  FIXME
+
+
+
+  THIS ISN'T WORKING. THE REQ.BODY IS NOT BEING SET. POSSIBLY IT IS HAPPENING ON 
+  THE CLIENT SIDE (BUNCH OF ISSUES ONLINE)
+
+  ALSO: THIS SHOULD KNOW WHEN A BLANK REQUEST WAS MADE AND SHOULD VALIDATE THE
+  REQUEST DATA, RETURNING AN ERROR WHEN NOTHING WAS SENT, OR WE'LL HAVE A BUNCH
+  OF BLANK RECORDS IN THE DB
+
+
+  */
+  const result = await Picture.create(req.body);
   result.success ? res.status(201) : res.status(500)
   res.json(result.result);
 })
 
 app.listen(3001, function () {
-  console.log('ATW API MOCK listening on port 3001!')
+  console.log('ATW API listening on port 3001!')
 })
