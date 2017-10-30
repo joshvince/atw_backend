@@ -9,10 +9,11 @@ const imageUploader = require('../lib/imageUploader.js');
   before returning any value.
 */
 async function createPicture(params) {
+  let uuid = uuidv4();
   console.log(`Trying S3...`)
   try {
-    const imageUrl = await imageUploader(params.image)
-    const fullParams = createDbObject(params, imageUrl)
+    let imageUrl = await imageUploader(params.image, uuid)
+    const fullParams = createDbObject(params, imageUrl, uuid)
     console.log(`Trying Dynamo DB...`)
     try {
       await db.create(fullParams, 'Pictures')
@@ -48,11 +49,11 @@ function isValidPictureData(params) {
 
 // Private functions
 
-function createDbObject(originalParams, imageUrl) {
+function createDbObject(originalParams, imageUrl, uuid) {
   // delete the original image params
   delete originalParams.image
   // add in the image url and uuid
-  return Object.assign(originalParams, {uuid: uuidv4(), image: imageUrl})
+  return Object.assign(originalParams, {uuid: uuid, image: imageUrl})
 }
 
 module.exports = {
