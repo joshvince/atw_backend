@@ -42,6 +42,10 @@ async function getAllPictures(scanParams) {
   }
 }
 
+function isValidPictureData(params) {
+  return params.hasOwnProperty("name") && params.hasOwnProperty("image")
+}
+
 // Private functions
 
 function createDbObject(originalParams, imageUrl) {
@@ -53,5 +57,6 @@ function createDbObject(originalParams, imageUrl) {
 
 module.exports = {
   create: createPicture,
-  getAll: getAllPictures
+  getAll: getAllPictures,
+  validate: isValidPictureData
 }

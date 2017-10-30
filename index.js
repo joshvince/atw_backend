@@ -18,7 +18,14 @@ app.get('/', function (req, res) {
   res.send('Hello World!')
 })
 
-// test picture data
+/* 
+
+TEST CALLS 
+
+ALWAYS RETURN FAKE DATA 
+
+*/
+
 var ALLPICTURES = [
   {
     year: 2010,
@@ -40,7 +47,7 @@ var ALLPICTURES = [
   }
 ]
 
-app.get('/api/pictures', function (req, res) {
+app.get('/test/pictures', function (req, res) {
   res.json(ALLPICTURES)
 })
 
@@ -53,12 +60,18 @@ var NEWPICTURE = {
     coordinates: [51.29366510461659, -0.007704632002884182]
   }
 }
-// right now, just send back a fake picture
-app.post('/api/pictures/new', function(req, res) {
+
+app.post('/test/pictures/new', function(req, res) {
   res.send(NEWPICTURE)
 })
 
-/* REAL IMPLEMENTATION OF API */
+/* 
+
+
+REAL IMPLEMENTATION WORKING WITH ACTUAL DATA
+
+
+*/
 
 // Get all the pictures
 app.get('/pictures/all', async (req, res) => {
@@ -70,27 +83,15 @@ app.get('/pictures/all', async (req, res) => {
 // Create a new picture
 app.post('/pictures/new', async (req, res) => {
   console.log(`RECEIVED POST ${JSON.stringify(req.body, null, 2)}`)
-
-
-  /*
-
-
-  FIXME
-
-
-
-  THIS ISN'T WORKING. THE REQ.BODY IS NOT BEING SET. POSSIBLY IT IS HAPPENING ON 
-  THE CLIENT SIDE (BUNCH OF ISSUES ONLINE)
-
-  ALSO: THIS SHOULD KNOW WHEN A BLANK REQUEST WAS MADE AND SHOULD VALIDATE THE
-  REQUEST DATA, RETURNING AN ERROR WHEN NOTHING WAS SENT, OR WE'LL HAVE A BUNCH
-  OF BLANK RECORDS IN THE DB
-
-
-  */
-  const result = await Picture.create(req.body);
-  result.success ? res.status(201) : res.status(500)
-  res.json(result.result);
+  if (Picture.validate(req.body)) {
+    const result = await Picture.create(req.body);
+    result.success ? res.status(201) : res.status(500)
+    res.json(result.result);
+  }
+  else {
+    res.status(400)
+    res.send("Bad Request")
+  }
 })
 
 app.listen(3001, function () {
