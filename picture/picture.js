@@ -1,6 +1,6 @@
 const db = require('../lib/db.js');
 const uuidv4 = require('uuid/v4');
-const imageUploader = require('../lib/imageUploader.js');
+const ImageUploader = require('../lib/imageUploader.js');
 
 /* 
   Upload the image to S3 and then create a record in the Database. 
@@ -12,7 +12,7 @@ async function createPicture(params) {
   let uuid = uuidv4();
   console.log(`Trying S3...`)
   try {
-    let imageUrl = await imageUploader(params.image, uuid)
+    let imageUrl = await ImageUploader.uploadNewImage(params.image, uuid)
     const fullParams = createDbObject(params, imageUrl, uuid)
     console.log(`Trying Dynamo DB...`)
     try {

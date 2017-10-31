@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const Picture = require('./picture/picture.js');
 
 app.use(morgan('dev')); // dev logging
-app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.json({limit: '2mb'})); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
