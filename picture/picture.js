@@ -1,32 +1,15 @@
 const db = require('../lib/db.js');
 const uuidv4 = require('uuid/v4');
-const ImageUploader = require('../lib/imageUploader.js');
 
-/* 
-  Upload the image to S3 and then create a record in the Database. 
-  This is an ASYNCHRONOUS function which means it will wait for 
-  the various operations (such as uploading to S3 and adding to Dynamo)
-  before returning any value.
-*/
 async function createPicture(params) {
-  let uuid = uuidv4();
-  console.log(`Trying S3...`)
+  console.log(`Trying Dynamo DB...`)
   try {
-    let imageUrl = await ImageUploader.uploadNewImage(params.image, uuid)
-    const fullParams = createDbObject(params, imageUrl, uuid)
-    console.log(`Trying Dynamo DB...`)
-    try {
-      await db.create(fullParams, 'Pictures')
-      console.log(`That worked: record was ${JSON.stringify(fullParams,null,2)}`)
-      return {success: true, result: fullParams};
-    } 
-    catch (error) {
-      console.error(`DDB didn't work: ${error}`)
-      return {success: false, result: error};
-    }
+    await db.create(params, 'Pictures')
+    console.log(`That worked: record was ${JSON.stringify(params,null,2)}`)
+    return {success: true, result: params};
   } 
   catch (error) {
-    console.error(`S3 didn't work: ${error}`)
+    console.error(`DDB didn't work: ${error}`)
     return {success: false, result: error};
   }
 };
@@ -45,15 +28,6 @@ async function getAllPictures(scanParams) {
 
 function isValidPictureData(params) {
   return params.hasOwnProperty("name") && params.hasOwnProperty("image")
-}
-
-// Private functions
-
-function createDbObject(originalParams, imageUrl, uuid) {
-  // delete the original image params
-  delete originalParams.image
-  // add in the image url and uuid
-  return Object.assign(originalParams, {uuid: uuid, image: imageUrl})
 }
 
 module.exports = {
