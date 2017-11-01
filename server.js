@@ -3,6 +3,7 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const Picture = require('./picture/picture.js');
+const User = require('./user/user.js');
 const ImageUploader = require('./lib/imageUploader.js');
 
 app.use(morgan('dev')); // dev logging
@@ -17,6 +18,8 @@ app.use(function(req, res, next) {
 app.get('/', function (req, res) {
   res.send('Hello World!')
 })
+
+// PICTURES
 
 // Get all the pictures
 app.get('/pictures/all', async (req, res) => {
@@ -39,6 +42,8 @@ app.post('/pictures/new', async (req, res) => {
   }
 })
 
+// IMAGES (S3)
+
 // Send a presigned URL so the client can upload the image to S3.
 app.get('/sign-s3', async (req, res) => {
   let filename = req.query['file-name'];
@@ -46,6 +51,35 @@ app.get('/sign-s3', async (req, res) => {
   const signedUrl = await ImageUploader.createPresignedUrl(filename, filetype)
   res.json(signedUrl);
 })
+
+// USERS 
+
+/* This is a basic "sign in" implementation, that listens for user ids
+and then queries the user table for users with that ID. It returns the
+user object if it found one and an error if it didn't */
+app.get('/signin', (req, res) => {
+  const requestedId = req.query['user-id'];
+  User.logIn(requestedId).then(result => {
+    if (result) {
+      res.status(200)
+      res.json(result)
+    }
+    else {
+      res.status(500)
+      res.json({error: "User was not found"})
+    }
+  })
+})
+
+// Returns a list of users in the DB
+app.get('/users/all', (req, res) => {
+  User.getUserList().then(list => {
+    res.status(200)
+    res.json(list)
+  }).catch(err => {
+    res.status(500)
+    res.json({error: "Could not fetch the user list"})
+  }); 
 
 app.listen(3001, function () {
   console.log('ATW API listening on port 3001!')
