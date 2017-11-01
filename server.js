@@ -19,6 +19,8 @@ app.get('/', function (req, res) {
   res.send('Hello World!')
 })
 
+// PICTURES
+
 // Get all the pictures
 app.get('/pictures/all', async (req, res) => {
   const result = await Picture.getAll({});
@@ -39,6 +41,18 @@ app.post('/pictures/new', async (req, res) => {
     res.send("Bad Request")
   }
 })
+
+// IMAGES (S3)
+
+// Send a presigned URL so the client can upload the image to S3.
+app.get('/sign-s3', async (req, res) => {
+  let filename = req.query['file-name'];
+  let filetype = req.query['file-type'];
+  const signedUrl = await ImageUploader.createPresignedUrl(filename, filetype)
+  res.json(signedUrl);
+})
+
+// USERS 
 
 /* This is a basic "sign in" implementation, that listens for user ids
 and then queries the user table for users with that ID. It returns the
@@ -66,13 +80,6 @@ app.get('/users/all', (req, res) => {
     res.status(500)
     res.json({error: "Could not fetch the user list"})
   }); 
-// Send a presigned URL so the client can upload the image to S3.
-app.get('/sign-s3', async (req, res) => {
-  let filename = req.query['file-name'];
-  let filetype = req.query['file-type'];
-  const signedUrl = await ImageUploader.createPresignedUrl(filename, filetype)
-  res.json(signedUrl);
-})
 
 app.listen(3001, function () {
   console.log('ATW API listening on port 3001!')
