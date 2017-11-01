@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const Picture = require('./picture/picture.js');
 const User = require('./user/user.js');
+const ImageUploader = require('./lib/imageUploader.js');
 
 app.use(morgan('dev')); // dev logging
 app.use(bodyParser.json({limit: '2mb'})); // support json encoded bodies
@@ -65,6 +66,12 @@ app.get('/users/all', (req, res) => {
     res.status(500)
     res.json({error: "Could not fetch the user list"})
   }); 
+// Send a presigned URL so the client can upload the image to S3.
+app.get('/sign-s3', async (req, res) => {
+  let filename = req.query['file-name'];
+  let filetype = req.query['file-type'];
+  const signedUrl = await ImageUploader.createPresignedUrl(filename, filetype)
+  res.json(signedUrl);
 })
 
 app.listen(3001, function () {
