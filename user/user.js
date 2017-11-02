@@ -35,4 +35,4 @@ module.exports = {
   getUserList: getUserList
 }
 
-// createNewUser({name: "Josh"}).then(res => { console.log(`NewUser: ${JSON.stringify(res)}`)})
+// createNewUser({name: "Joanna"}).then(res => { console.log(`NewUser: ${JSON.stringify(res)}`)})

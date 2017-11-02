@@ -24,7 +24,14 @@ app.get('/', function (req, res) {
 // Get all the pictures
 app.get('/pictures/all', async (req, res) => {
   const result = await Picture.getAll({});
-  result.success? res.status(200) : res.status(500)
+  result.success ? res.status(200) : res.status(500)
+  res.json(result.result)
+})
+
+app.get('/pictures', async (req, res) => {
+  const userId = req.query['user-id'];
+  const result = await Picture.getByUser(userId);
+  result.success ? res.status(200) : res.status(500)
   res.json(result.result)
 })
 

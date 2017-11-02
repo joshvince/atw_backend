@@ -26,12 +26,30 @@ async function getAllPictures(scanParams) {
   }
 }
 
+async function getPicturesByUser(userId) {
+  const scanParams = {
+    FilterExpression: "#id = :userId",
+    ExpressionAttributeNames: {"#id": "userId" },
+    ExpressionAttributeValues: {":userId": userId}
+  };
+  try {
+    const results = await db.scan(scanParams, 'Pictures')
+    return {success: true, result: results}
+  } 
+  catch (error) {
+    console.error(`Error: ${error}`)
+    return {success: false, result: error}
+  }
+}
+
 function isValidPictureData(params) {
-  return params.hasOwnProperty("name") && params.hasOwnProperty("image")
+  const validSchema = ["userId", "uuid", "image", "name"];
+  return validSchema.every(attr => params.hasOwnProperty(attr))
 }
 
 module.exports = {
   create: createPicture,
   getAll: getAllPictures,
+  getByUser: getPicturesByUser,
   validate: isValidPictureData
 }
