@@ -5,10 +5,11 @@ var uuidv4 = require('uuid/v4');
 async function getUserList() {
   try {
     const list = await db.scan({}, 'Users')
+    console.log(`User list is: ${JSON.stringify(list)}`)
     return list.Items
   } 
   catch (error) {
-    console.error(`Error fetching user list`)
+    console.error(`Error fetching user list: ${JSON.stringify(error)}`)
   }
 }
 
@@ -20,7 +21,7 @@ async function createNewUser(userParams) {
     return dbObj
   } 
   catch (error) {
-    console.error(`Could not create the user...`)
+    console.error(`Could not create the user: ${JSON.stringify(error)}`)
   }
 }
 
@@ -34,7 +35,4 @@ module.exports = {
   getUserList: getUserList
 }
 
-// createNewUser({name: "Josh"}).then(res => { console.log(`NewUser: ${JSON.stringify(res)}`)})
-
-// logIn({id: "6fb8e9c1-88f9-47b5-8e02-7b9a7e66917f"}).then(res => {console.log(`User found ${JSON.stringify(res)}`)})
-
+// createNewUser({name: "Joanna"}).then(res => { console.log(`NewUser: ${JSON.stringify(res)}`)})

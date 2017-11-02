@@ -24,7 +24,14 @@ app.get('/', function (req, res) {
 // Get all the pictures
 app.get('/pictures/all', async (req, res) => {
   const result = await Picture.getAll({});
-  result.success? res.status(200) : res.status(500)
+  result.success ? res.status(200) : res.status(500)
+  res.json(result.result)
+})
+
+app.get('/pictures', async (req, res) => {
+  const userId = req.query['user-id'];
+  const result = await Picture.getByUser(userId);
+  result.success ? res.status(200) : res.status(500)
   res.json(result.result)
 })
 
@@ -74,12 +81,15 @@ app.get('/signin', (req, res) => {
 // Returns a list of users in the DB
 app.get('/users/all', (req, res) => {
   User.getUserList().then(list => {
+    console.log(`User list is: ${JSON.stringify(list)}`)
     res.status(200)
     res.json(list)
   }).catch(err => {
     res.status(500)
     res.json({error: "Could not fetch the user list"})
   }); 
+
+})
 
 app.listen(3001, function () {
   console.log('ATW API listening on port 3001!')
