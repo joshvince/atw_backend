@@ -1,3 +1,10 @@
+// ENVIRONMENT VARIABLES
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').load();
+}
+const PORT = process.env.PORT || 3001
+
+// DEPENDENCIES
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
@@ -6,6 +13,7 @@ const Picture = require('./picture/picture.js');
 const User = require('./user/user.js');
 const ImageUploader = require('./lib/imageUploader.js');
 
+// MIDDLEWARE
 app.use(morgan('dev')); // dev logging
 app.use(bodyParser.json({limit: '2mb'})); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -14,6 +22,8 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 }); 
+
+// ROUTES
 
 app.get('/', function (req, res) {
   res.send('Hello World!')
@@ -91,6 +101,6 @@ app.get('/users/all', (req, res) => {
 
 })
 
-app.listen(3001, function () {
-  console.log('ATW API listening on port 3001!')
+app.listen(PORT, function () {
+  console.log(`ATW API listening on port ${PORT}!`)
 })
