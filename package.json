@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.141.0",
+    "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "morgan": "^1.9.0",
     "uuid": "^3.1.0"

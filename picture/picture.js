@@ -1,10 +1,14 @@
+//Environment Variables
+const PICTURES_TABLE_NAME = process.env.PICTURES_TABLE_NAME
+
+// Dependencies
 const db = require('../lib/db.js');
 const uuidv4 = require('uuid/v4');
 
 async function createPicture(params) {
   console.log(`Trying Dynamo DB...`)
   try {
-    await db.create(params, 'Pictures')
+    await db.create(params, PICTURES_TABLE_NAME)
     console.log(`That worked: record was ${JSON.stringify(params,null,2)}`)
     return {success: true, result: params};
   } 
@@ -16,7 +20,7 @@ async function createPicture(params) {
 
 async function getAllPictures(scanParams) {
   try {
-    const results = await db.scan(scanParams, 'Pictures')
+    const results = await db.scan(scanParams, PICTURES_TABLE_NAME)
     console.log(`Results: ${JSON.stringify(results, null, 2)}`)
     return {success: true, result: results};
   } 
@@ -33,7 +37,7 @@ async function getPicturesByUser(userId) {
     ExpressionAttributeValues: {":userId": userId}
   };
   try {
-    const results = await db.scan(scanParams, 'Pictures')
+    const results = await db.scan(scanParams, PICTURES_TABLE_NAME)
     return {success: true, result: results}
   } 
   catch (error) {
