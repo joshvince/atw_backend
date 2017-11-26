@@ -2,6 +2,17 @@
 const STORIES_TABLE_NAME = process.env.STORIES_TABLE_NAME
 const db = require('../lib/db.js');
 
+async function getOneStory(storyId) {
+  const primaryKey = {"uuid": storyId}
+  try {
+    const item = await db.get(primaryKey, STORIES_TABLE_NAME)
+    return {success: true, result: item.Item};
+  } catch (error) {
+    console.log(`There was an error getting the story: ${error}`)
+    return {success: false, result: error}
+  }
+}
+
 async function getAllStories(scanParams) {
   try {
     const results = await db.scan(scanParams, STORIES_TABLE_NAME)
@@ -40,6 +51,7 @@ function compareKeys(params, schema) {
 }
 
 module.exports = {
+  getOneStory: getOneStory,
   getAll: getAllStories,
   createNewStory: createNewStory,
   validate: isValidStoryData

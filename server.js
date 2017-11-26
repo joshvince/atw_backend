@@ -118,13 +118,23 @@ app.post('/stories/new', async (req, res) => {
   }
 })
 
-// Get all the pictures
+// Get all the stories
 app.get('/stories/all', async (req, res) => {
   const result = await Story.getAll({});
   result.success ? res.status(200) : res.status(500)
   res.json(result.result)
 })
 
+// Get one story by the story id
+app.get('/stories/:storyId', async (req, res) => {
+  return await Story.getOneStory(req.params.storyId).then(resp => {
+    resp.success ? res.status(200) : res.status(404)
+    res.json(resp.result)
+  })
+})
+
 app.listen(PORT, function () {
   console.log(`ATW API listening on port ${PORT}!`)
 })
+
+
