@@ -125,6 +125,21 @@ app.get('/stories/all', async (req, res) => {
   res.json(result.result)
 })
 
+// Get all the stories by the given userId.
+app.get('/stories', (req, res) => {
+  const userId = req.query['user-id'];
+  Story.getStoriesByUser(userId).then(result => {
+    res.status(200)
+    res.json(result.result)
+  }).catch(err => {
+    res.status(500)
+    res.json(err)
+  })
+})
+
+//TODO: make this consistent: either use async/await or .then() rather than
+// mixing between.
+
 // Get one story by the story id
 app.get('/stories/:storyId', async (req, res) => {
   return await Story.getOneStory(req.params.storyId).then(resp => {
@@ -136,5 +151,3 @@ app.get('/stories/:storyId', async (req, res) => {
 app.listen(PORT, function () {
   console.log(`ATW API listening on port ${PORT}!`)
 })
-
-
