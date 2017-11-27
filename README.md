@@ -17,6 +17,10 @@ This is a really basic backend server for the A Thousand Words app. It speaks to
 ### GET `/stories/all`
 Returns JSON array of all the story records currently in the database
 
+### GET `/stories`
+_Required Query Params: `user-id`_
+Returns a JSON array of all the story records created by the given `user-id`
+
 ### GET `/stories/:storyId`
 Expects `:storyId` to be a valid UUID of a story already in the database.  
 
