@@ -14,26 +14,50 @@ This is a really basic backend server for the A Thousand Words app. It speaks to
 
 ## API
 
-### GET `/pictures/all`
-Returns JSON array of all picture records currently in the Database.
+### GET `/stories/all`
+Returns JSON array of all the story records currently in the database
 
-### POST `/pictures/new`
+### GET `/stories/:storyId`
+Expects `:storyId` to be a valid UUID of a story already in the database.  
+
+If there is a record in the table with that UUID, this returns a code `200` along with the item as JSON in the body of the response.  
+
+If there was was no record found with that UUID, it will return a code `404`. The body will be an error message.
+
+### POST `/stories/new`
 Accepts JSON data.  
-The body of your request should be a valid picture JSON:  
+The body of your request should be a valid story JSON:  
 
 There is only a limited schema enforced:  
 ```
 {
-  name: "String",
-  id: "String",
-  image: "String"
+  userId: "String",
+  uuid: "String",
+  title: "String",
+  subtitle: "String",
+  steps: [validStep, validStep]
 }
 
 ```
 
+`steps` should be an array containing valid JSON objects that adhere to this schema:
+
+```
+{
+  headline: "String", 
+  description: "String", 
+  stepKey: "String",
+  image: {
+    url: "String",
+    uuid: "String",
+    userId: "String"
+  }
+}
+```
+
 The app uses `uuidv4` for ids.  
 
-Currently, the actual uploading of the images is done on the client side, and this app just accepts image urls.  
+Currently, the actual uploading of the images is done on the client side, and this app just accepts image urls within the `image` attribute of a story's `step`.  
 
 Returns the JSON object that was entered into the DB, or an error object.  
 

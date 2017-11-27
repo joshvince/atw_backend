@@ -12,6 +12,7 @@ const bodyParser = require('body-parser');
 const Picture = require('./picture/picture.js');
 const User = require('./user/user.js');
 const ImageUploader = require('./lib/imageUploader.js');
+const Story = require('./story/story.js');
 
 // MIDDLEWARE
 app.use(morgan('dev')); // dev logging
@@ -101,6 +102,39 @@ app.get('/users/all', (req, res) => {
 
 })
 
+// STORIES
+
+// Create a new story
+app.post('/stories/new', async (req, res) => {
+  console.log(`RECEIVED POST ${JSON.stringify(req.body, null, 2)}`)
+  if (Story.validate(req.body)) {
+    const result = await Story.createNewStory(req.body);
+    result.success ? res.status(201) : res.status(500)
+    res.json(result.result);
+  }
+  else {
+    res.status(400)
+    res.send("Bad Request")
+  }
+})
+
+// Get all the stories
+app.get('/stories/all', async (req, res) => {
+  const result = await Story.getAll({});
+  result.success ? res.status(200) : res.status(500)
+  res.json(result.result)
+})
+
+// Get one story by the story id
+app.get('/stories/:storyId', async (req, res) => {
+  return await Story.getOneStory(req.params.storyId).then(resp => {
+    resp.success ? res.status(200) : res.status(404)
+    res.json(resp.result)
+  })
+})
+
 app.listen(PORT, function () {
   console.log(`ATW API listening on port ${PORT}!`)
 })
+
+

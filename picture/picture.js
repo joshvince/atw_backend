@@ -6,10 +6,9 @@ const db = require('../lib/db.js');
 const uuidv4 = require('uuid/v4');
 
 async function createPicture(params) {
-  console.log(`Trying Dynamo DB...`)
   try {
     await db.create(params, PICTURES_TABLE_NAME)
-    console.log(`That worked: record was ${JSON.stringify(params,null,2)}`)
+    console.log(`Picture was created`)
     return {success: true, result: params};
   } 
   catch (error) {
@@ -47,7 +46,7 @@ async function getPicturesByUser(userId) {
 }
 
 function isValidPictureData(params) {
-  const validSchema = ["userId", "uuid", "image", "name"];
+  const validSchema = ["userId", "uuid", "url"];
   return validSchema.every(attr => params.hasOwnProperty(attr))
 }
 
