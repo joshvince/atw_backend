@@ -27,7 +27,7 @@ app.use(function(req, res, next) {
 // ROUTES
 
 app.get('/', function (req, res) {
-  res.send('Hello World!')
+  res.send('Hello There World!')
 })
 
 // PICTURES

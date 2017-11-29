@@ -2,9 +2,12 @@
   "name": "atw_backend",
   "version": "1.0.0",
   "description": "backend for the a thousand words app",
+  "repository": "https://www.github.com:joshvince/atw_backend",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "restart": "pm2 startOrRestart ecosystem.config.js --env production",
+    "deploy": "pm2 deploy ecosystem.config.js production",
     "test": "jest"
   },
   "author": "",
@@ -17,6 +20,7 @@
     "uuid": "^3.1.0"
   },
   "devDependencies": {
-    "jest": "^21.2.1"
+    "jest": "^21.2.1",
+    "pm2": "^2.8.0"
   }
 }
