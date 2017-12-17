@@ -78,3 +78,10 @@ Returns a JSON array of user objects currently in the Database.
 _Required Query Params_: `user-id`  
 
 Returns a JSON object representing the  user associated with the given `user-id` or `{error: reason}` if there was no user associated with the given ID.
+
+
+# Learning Resources
+
+I used the following articles to help me deploy my app:
+https://hackernoon.com/tutorial-creating-and-managing-a-node-js-server-on-aws-part-1-d67367ac5171  
+https://hackernoon.com/tutorial-creating-and-managing-a-node-js-server-on-aws-part-2-5fbdea95f8a1
