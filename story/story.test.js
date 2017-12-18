@@ -2,7 +2,6 @@ jest.mock('../lib/db.js');
 const Story = require('./story.js');
 
 const STORYSCHEMA = ["userId", "uuid", "title", "subtitle", "steps"].sort();
-const STEPSCHEMA = ["headline", "description", "image", "stepKey"].sort();
 
 const POSTDATA = {
   uuid: "12345",
@@ -44,24 +43,15 @@ describe('#validate', () => {
     }
   }
   const goodStep = {headline: 1, description: 2, image: 3, stepKey: 4}
-  const badStep = {secret: "destroy", aim: "sneaky"}
   const goodParams = generateParams([goodStep])
-  const sneakyParams = generateParams([goodStep, badStep])
   const badParams = {drop: "all tables", destroy: "mankind"}
 
-  it('should accept stories that do not match the schema', () => {
+  it('should accept stories that match the schema', () => {
     const resp = Story.validate(goodParams)
     expect(resp).toBeTruthy();
   });
 
-  
-  it('should reject stories with any invalid steps', () => {
-    const resp = Story.validate(sneakyParams)
-    expect(resp).toBeFalsy();
-  });
-  
-
-  it('should reject stories that match the schema', () => {
+  it('should reject stories that do not match the schema', () => {
     const resp = Story.validate(badParams)
     expect(resp).toBeFalsy();
   });
@@ -77,15 +67,6 @@ describe('#createNewStory', () => {
 
     expect(resp.success).toBeTruthy();
     expect(storyKeys).toMatchObject(STORYSCHEMA);
-  });
-
-  it('should create a story with valid steps', async () => {
-    expect.assertions(2);
-    const resp = await Story.createNewStory(POSTDATA)
-    const stepKeys = Object.keys(resp.result.steps[0]).sort();
-
-    expect(resp.success).toBeTruthy();
-    expect(stepKeys).toMatchObject(STEPSCHEMA);
   });
     
 });
