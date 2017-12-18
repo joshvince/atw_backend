@@ -25,7 +25,7 @@ module.exports = {
   deploy : {
     production : {
       user : 'ubuntu',
-      host : 'ec2-52-18-19-133.eu-west-1.compute.amazonaws.com',
+      host : 'ec2-34-251-83-119.eu-west-1.compute.amazonaws.com',
       key  : '~/.ssh/atw-ec2.pem',
       ref  : 'origin/master',
       repo : 'git@github.com:joshvince/atw_backend.git',
