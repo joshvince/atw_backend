@@ -61,7 +61,7 @@ async function createNewStory(storyObject) {
 // Checks a given set of params to ensure that the minimum attributes to create 
 // a story are contained inside, returns true or false.
 function isValidStoryData(params) {
-  const storySchema = [ "userId", "uuid", "title", "subtitle", "steps"]
+  const storySchema = [ "userId", "uuid", "title", "steps"]
   return compareKeys(params, storySchema) 
 }
 
