@@ -32,13 +32,16 @@ app.get('/', function (req, res) {
 
 // PICTURES
 
-// Get all the pictures
+// Get all the pictures WARNING this will literally just give you everything, 
+// So use it with caution...
 app.get('/pictures/all', async (req, res) => {
   const result = await Picture.getAll({});
   result.success ? res.status(200) : res.status(500)
   res.json(result.result)
 })
 
+// Get all pictures stored against the given user ID, which should be supplied
+// as query params.
 app.get('/pictures', async (req, res) => {
   const userId = req.query['user-id'];
   const result = await Picture.getByUser(userId);
@@ -58,6 +61,14 @@ app.post('/pictures/new', async (req, res) => {
     res.status(400)
     res.send("Bad Request")
   }
+})
+
+// Get one picture by a pictureId
+app.get('/pictures/:pictureId', async (req, res) => {
+  return await Picture.getOnePicture(req.params.pictureId).then(resp => {
+    resp.success ? res.status(200) : res.status(404)
+    res.json(resp.result)
+  })
 })
 
 // IMAGES (S3)
