@@ -58,7 +58,7 @@ async function getPicturesByUser(userId) {
 }
 
 function isValidPictureData(params) {
-  const validSchema = ["userId", "uuid", "url"];
+  const validSchema = ["userId", "uuid", "url", "name"];
   return validSchema.every(attr => params.hasOwnProperty(attr))
 }
 
